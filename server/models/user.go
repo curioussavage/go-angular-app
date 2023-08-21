@@ -8,6 +8,8 @@ const (
 	Terminated UserStatus = "T"
 )
 
+// User model
+// @Description User account information
 type User struct {
 	UserName   string
 	FirstName  string
