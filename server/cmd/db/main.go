@@ -19,7 +19,7 @@ func main() {
 	sql := `
 	  CREATE TABLE users (
 				user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-				username VARCHAR(50) NOT NULL,
+				username VARCHAR(50) NOT NULL UNIQUE,
 				first_name VARCHAR(255) NOT NULL,
 				last_name VARCHAR(255) NOT NULL,
 				email VARCHAR(255) NOT NULL,
@@ -43,14 +43,14 @@ func main() {
 			UserStatus: models.Active,
 		},
 		{
-			UserName:   "user1",
+			UserName:   "user2",
 			FirstName:  "john",
 			LastName:   "doe",
 			Email:      "foo@b.com",
 			UserStatus: models.Active,
 		},
 		{
-			UserName:   "user1",
+			UserName:   "user3",
 			FirstName:  "junior",
 			LastName:   "doe",
 			Email:      "junior@b.com",

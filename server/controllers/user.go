@@ -107,7 +107,7 @@ func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
 
 	newUser, err := ctl.userService.CreateUser(user)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Could not create user")
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, newUser)
 }
