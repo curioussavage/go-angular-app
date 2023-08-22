@@ -60,7 +60,11 @@ type UserService struct {
 }
 
 func (u *UserService) GetUsers() ([]User, error) {
-	rows, err := squirrel.Select("*").From("users").RunWith(u.DB).Query()
+	rows, err := squirrel.Select("*").
+		From("users").
+		Where(squirrel.Eq{"user_status": Active}).
+		RunWith(u.DB).
+		Query()
 	if err != nil {
 		return nil, err
 	}
@@ -114,9 +118,11 @@ func (u *UserService) CreateUser(user UserCreationForm) (User, error) {
 	}
 }
 
-func (u *UserService) DeleteUser(userId int) error {
-	del := squirrel.Delete("users").Where(squirrel.Eq{"user_id": userId})
-	_, err := del.RunWith(u.DB).Exec()
+func (u *UserService) DeleteUser(userID int) error {
+	updateQuery := squirrel.Update("users").Where(squirrel.Eq{"user_id": userID})
+	updateQuery = updateQuery.Set("user_status", Terminated)
+
+	_, err := updateQuery.RunWith(u.DB).Exec()
 	if err != nil {
 		return err
 	}
