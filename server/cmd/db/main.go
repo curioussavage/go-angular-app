@@ -24,7 +24,7 @@ func main() {
 				last_name VARCHAR(255) NOT NULL,
 				email VARCHAR(255) NOT NULL,
 				department VARCHAR(255) NULL,
-				user_status VARCHAR(1) NOT NULL
+				user_status VARCHAR(1) NOT NULL DEFAULT 'A'
 		)
 	`
 	_, err = db.Exec(sql)
@@ -36,32 +36,29 @@ func main() {
 
 	users := []models.User{
 		{
-			UserName:   "user1",
-			FirstName:  "jane",
-			LastName:   "doe",
-			Email:      "jane@b.com",
-			UserStatus: models.Active,
+			UserName:  "user1",
+			FirstName: "jane",
+			LastName:  "doe",
+			Email:     "jane@b.com",
 		},
 		{
-			UserName:   "user2",
-			FirstName:  "john",
-			LastName:   "doe",
-			Email:      "foo@b.com",
-			UserStatus: models.Active,
+			UserName:  "user2",
+			FirstName: "john",
+			LastName:  "doe",
+			Email:     "foo@b.com",
 		},
 		{
-			UserName:   "user3",
-			FirstName:  "junior",
-			LastName:   "doe",
-			Email:      "junior@b.com",
-			UserStatus: models.Active,
+			UserName:  "user3",
+			FirstName: "junior",
+			LastName:  "doe",
+			Email:     "junior@b.com",
 		},
 	}
 
 	insertBuilder := squirrel.Insert("users")
 	for _, user := range users {
-		ins := insertBuilder.Columns("username", "first_name", "last_name", "email", "user_status").
-			Values(user.UserName, user.FirstName, user.LastName, user.Email, user.UserStatus)
+		ins := insertBuilder.Columns("username", "first_name", "last_name", "email").
+			Values(user.UserName, user.FirstName, user.LastName, user.Email)
 		_, err := ins.RunWith(db).Exec()
 		if err != nil {
 			log.Printf("Could not insert user %s: %v\n", user.UserName, err)

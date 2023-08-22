@@ -11,7 +11,7 @@ import (
 
 type UserService interface {
 	GetUsers() ([]models.User, error)
-	CreateUser(user models.User) (models.User, error)
+	CreateUser(user models.UserCreationForm) (models.User, error)
 	DeleteUser(userId int) error
 	UpdateUser(user models.User) (models.User, error)
 }
@@ -92,10 +92,11 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 // @Description create a user
 // @Accept json
 // @Produce json
+// @Param user body models.UserCreationForm true "user to create"
 // @Success 200 {object} models.User
 // @Router /user [post]
 func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
-	var user models.User
+	var user models.UserCreationForm
 	err := c.Bind(&user)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Bad request")
@@ -107,6 +108,9 @@ func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
 
 	newUser, err := ctl.userService.CreateUser(user)
 	if err != nil {
+		if _, ok := err.(*models.UsernameTakenError); ok {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, newUser)

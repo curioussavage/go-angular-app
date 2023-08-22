@@ -6,7 +6,16 @@ import (
 	"log"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/mattn/go-sqlite3"
 )
+
+type UsernameTakenError struct {
+	name string
+}
+
+func (e *UsernameTakenError) Error() string {
+	return fmt.Sprintf("username %s already exists", e.name)
+}
 
 type UserStatus string
 
@@ -26,6 +35,16 @@ type User struct {
 	Email      string     `json:"email" db:"email" validate:"email,min=3,max=255"`
 	Department string     `json:"department" db:"department" validate:"omitempty,min=1,max=255"`
 	UserStatus UserStatus `json:"userStatus" db:"user_status" validate:"omitempty,oneof=I A T"`
+}
+
+// User create form
+// @Description new user form data
+type UserCreationForm struct {
+	UserName   string `json:"userName" validate:"min=3,max=50"`
+	FirstName  string `json:"firstName" validate:"min=1,max=255"`
+	LastName   string `json:"lastName" validate:"min=1,max=255"`
+	Email      string `json:"email" validate:"email,min=3,max=255"`
+	Department string `json:"department" validate:"omitempty,min=1,max=255"`
 }
 
 type UserService struct {
@@ -60,15 +79,18 @@ func (u *UserService) GetUsers() ([]User, error) {
 	return users, nil
 }
 
-func (u *UserService) CreateUser(user User) (User, error) {
-	user.UserStatus = Active
+func (u *UserService) CreateUser(user UserCreationForm) (User, error) {
 	ins := squirrel.Insert("users").
-		Columns("username", "first_name", "last_name", "email", "user_status", "department").
-		Values(user.UserName, user.FirstName, user.LastName, user.Email, user.UserStatus, user.Department)
+		Columns("username", "first_name", "last_name", "email", "department").
+		Values(user.UserName, user.FirstName, user.LastName, user.Email, user.Department)
 
 	res, err := ins.RunWith(u.DB).Exec()
 	if err != nil {
-		// TODO wrap errors
+		if sqliteErr, ok := err.(sqlite3.Error); ok {
+			if sqliteErr.Code == sqlite3.ErrConstraint && sqliteErr.ExtendedCode == sqlite3.ErrConstraintUnique {
+				return User{}, &UsernameTakenError{name: user.UserName}
+			}
+		}
 		return User{}, err
 	}
 
@@ -76,18 +98,20 @@ func (u *UserService) CreateUser(user User) (User, error) {
 	if err != nil {
 		return User{}, err
 	}
-	user.UserID = int(lastId)
-	return user, nil
+
+	if newUser, err := u.getUser(int(lastId)); err != nil {
+		return User{}, err
+	} else {
+		return newUser, nil
+	}
 }
 
 func (u *UserService) DeleteUser(userId int) error {
 	del := squirrel.Delete("users").Where(squirrel.Eq{"user_id": userId})
-	res, err := del.RunWith(u.DB).Exec()
+	_, err := del.RunWith(u.DB).Exec()
 	if err != nil {
 		return err
 	}
-	rows, _ := res.RowsAffected()
-	log.Printf("rows affected %d", rows)
 	return nil
 }
 
