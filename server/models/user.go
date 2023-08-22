@@ -60,10 +60,32 @@ func (u *UserService) GetUsers() ([]User, error) {
 }
 
 func (u *UserService) CreateUser(user User) (User, error) {
-	return User{}, nil
+	ins := squirrel.Insert("users").
+		Columns("username", "first_name", "last_name", "email", "user_status").
+		Values(user.UserName, user.FirstName, user.LastName, user.Email, user.UserStatus)
+
+	res, err := ins.RunWith(u.DB).Exec()
+	if err != nil {
+		// TODO wrap errors
+		return User{}, err
+	}
+
+	lastId, err := res.LastInsertId()
+	if err != nil {
+		return User{}, err
+	}
+	user.UserID = int(lastId)
+	return user, nil
 }
 
 func (u *UserService) DeleteUser(userId int) error {
+	del := squirrel.Delete("users").Where(squirrel.Eq{"user_id": userId})
+	res, err := del.RunWith(u.DB).Exec()
+	if err != nil {
+		return err
+	}
+	rows, _ := res.RowsAffected()
+	log.Printf("rows affected %d", rows)
 	return nil
 }
 

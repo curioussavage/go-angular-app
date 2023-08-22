@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/curioussavage/integra/models"
 	"github.com/labstack/echo/v4"
@@ -41,9 +42,20 @@ func (ctl *UserController) GetUsersController(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "ok"
-// @Router /user [delete]
+// @Router /user/:id [delete]
 func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
-	return c.String(http.StatusOK, "delete")
+	userIdString := c.Param("id")
+	userID, err := strconv.Atoi(userIdString)
+	if err != nil {
+		// TODO add an err response type
+		return c.String(http.StatusBadRequest, "Bad request: id must be an integer")
+	}
+
+	if err := ctl.userService.DeleteUser(userID); err != nil {
+		return c.String(http.StatusInternalServerError, "Encountered an error while deleting user")
+
+	}
+	return c.String(http.StatusOK, "ok")
 }
 
 // @Summary Update a user
@@ -63,5 +75,15 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 // @Success 200 {object} models.User
 // @Router /user [post]
 func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
-	return c.String(http.StatusOK, "create")
+	var user models.User
+	err := c.Bind(&user)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Bad request")
+	}
+
+	newUser, err := ctl.userService.CreateUser(user)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Could not create user")
+	}
+	return c.JSON(http.StatusOK, newUser)
 }
