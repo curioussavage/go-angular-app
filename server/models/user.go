@@ -20,12 +20,12 @@ const (
 // @Description User account information
 type User struct {
 	UserID     int        `json:"userID" db:"user_id"`
-	UserName   string     `json:"userName" db:"username"`
-	FirstName  string     `json:"firstName" db:"first_name"`
-	LastName   string     `json:"lastName" db:"last_name"`
-	Email      string     `json:"email" db:"email"`
-	Department string     `json:"department" db:"department"`
-	UserStatus UserStatus `json:"userStatus" db:"user_status"`
+	UserName   string     `json:"userName" db:"username" validate:"min=3,max=50"`
+	FirstName  string     `json:"firstName" db:"first_name" validate:"min=1,max=255"`
+	LastName   string     `json:"lastName" db:"last_name" validate:"min=1,max=255"`
+	Email      string     `json:"email" db:"email" validate:"email,min=3,max=255"`
+	Department string     `json:"department" db:"department" validate:"omitempty,min=1,max=255"`
+	UserStatus UserStatus `json:"userStatus" db:"user_status" validate:"omitempty,oneof=I A T"`
 }
 
 type UserService struct {
@@ -61,9 +61,10 @@ func (u *UserService) GetUsers() ([]User, error) {
 }
 
 func (u *UserService) CreateUser(user User) (User, error) {
+	user.UserStatus = Active
 	ins := squirrel.Insert("users").
-		Columns("username", "first_name", "last_name", "email", "user_status").
-		Values(user.UserName, user.FirstName, user.LastName, user.Email, user.UserStatus)
+		Columns("username", "first_name", "last_name", "email", "user_status", "department").
+		Values(user.UserName, user.FirstName, user.LastName, user.Email, user.UserStatus, user.Department)
 
 	res, err := ins.RunWith(u.DB).Exec()
 	if err != nil {

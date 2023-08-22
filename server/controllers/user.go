@@ -101,6 +101,10 @@ func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Bad request")
 	}
 
+	if err := c.Validate(user); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
 	newUser, err := ctl.userService.CreateUser(user)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Could not create user")

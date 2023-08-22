@@ -3,15 +3,28 @@ package main
 import (
 	"database/sql"
 	"log"
+	"net/http"
 
 	"github.com/curioussavage/integra/controllers"
 	"github.com/curioussavage/integra/models"
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/curioussavage/integra/docs"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
 
 // @title User API
 // @version 1.0
@@ -33,6 +46,8 @@ func main() {
 	}
 	userService := models.UserService{DB: db}
 	userController := controllers.NewUserController(&userService)
+
+	e.Validator = &CustomValidator{validator: validator.New()}
 
 	e.GET("/api/v1/users", userController.GetUsersController)
 	e.POST("/api/v1/user", userController.CreateUsercontroller)
