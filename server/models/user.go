@@ -11,11 +11,12 @@ const (
 // User model
 // @Description User account information
 type User struct {
-	UserName   string
-	FirstName  string
-	LastName   string
-	Email      string
-	UserStatus UserStatus
+	UserID     int        `json:"userID"`
+	UserName   string     `json:"userName"`
+	FirstName  string     `json:"firstName"`
+	LastName   string     `json:"lastName"`
+	Email      string     `json:"email"`
+	UserStatus UserStatus `json:"userStatus"`
 }
 
 func GetUsers() []User {
