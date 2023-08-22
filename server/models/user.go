@@ -47,6 +47,14 @@ type UserCreationForm struct {
 	Department string `json:"department" validate:"omitempty,min=1,max=255"`
 }
 
+// User create form
+// @Description new user form data
+type UserUpdateForm struct {
+	FirstName string `json:"firstName" validate:"omitempty,min=1,max=255"`
+	LastName  string `json:"lastName" validate:"omitempty,min=1,max=255"`
+	Email     string `json:"email" validate:"omitempty,email,min=3,max=255"`
+}
+
 type UserService struct {
 	DB *sql.DB
 }
@@ -115,12 +123,9 @@ func (u *UserService) DeleteUser(userId int) error {
 	return nil
 }
 
-func (u *UserService) UpdateUser(user User) (User, error) {
-	updateQuery := squirrel.Update("users").Where(squirrel.Eq{"user_id": user.UserID})
+func (u *UserService) UpdateUser(userID int, user UserUpdateForm) (User, error) {
+	updateQuery := squirrel.Update("users").Where(squirrel.Eq{"user_id": userID})
 
-	if user.UserName != "" {
-		updateQuery = updateQuery.Set("username", user.UserName)
-	}
 	if user.FirstName != "" {
 		updateQuery = updateQuery.Set("first_name", user.FirstName)
 	}
@@ -130,22 +135,13 @@ func (u *UserService) UpdateUser(user User) (User, error) {
 	if user.Email != "" {
 		updateQuery = updateQuery.Set("email", user.Email)
 	}
-	if user.UserStatus != "" {
-		updateQuery = updateQuery.Set("user_status", user.UserStatus)
-	}
-
-	if user.Department == "" {
-		updateQuery = updateQuery.Set("department", nil)
-	} else {
-		updateQuery = updateQuery.Set("department", user.Department)
-	}
 
 	_, err := updateQuery.RunWith(u.DB).Exec()
 	if err != nil {
 		return User{}, fmt.Errorf("Could not update user: %v", err)
 	}
 
-	newUser, err := u.getUser(user.UserID)
+	newUser, err := u.getUser(userID)
 	if err != nil {
 		return User{}, err
 	}

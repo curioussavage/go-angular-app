@@ -51,7 +51,7 @@ func main() {
 
 	e.GET("/api/v1/users", userController.GetUsersController)
 	e.POST("/api/v1/user", userController.CreateUsercontroller)
-	e.PUT("/api/v1/user/:id", userController.UpdateUsercontroller)
+	e.PATCH("/api/v1/user/:id", userController.UpdateUsercontroller)
 	e.DELETE("/api/v1/user/:id", userController.DeleteUsercontroller)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

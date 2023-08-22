@@ -12,8 +12,8 @@ import (
 type UserService interface {
 	GetUsers() ([]models.User, error)
 	CreateUser(user models.UserCreationForm) (models.User, error)
-	DeleteUser(userId int) error
-	UpdateUser(user models.User) (models.User, error)
+	DeleteUser(userID int) error
+	UpdateUser(userID int, user models.UserUpdateForm) (models.User, error)
 }
 
 type UserController struct {
@@ -63,10 +63,11 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Description Update a user
 // @Accept json
 // @Produce json
+// @Param user body models.UserUpdateForm true "user data to update"
 // @Success 200 {object} models.User
-// @Router /user/:id [put]
+// @Router /user/:id [patch]
 func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
-	var user models.User
+	var user models.UserUpdateForm
 	err := c.Bind(&user)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Bad request")
@@ -78,9 +79,8 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 		// TODO add an err response type
 		return c.String(http.StatusBadRequest, "Bad request: id must be an integer")
 	}
-	user.UserID = userID
 
-	updatedUser, err := ctl.userService.UpdateUser(user)
+	updatedUser, err := ctl.userService.UpdateUser(userID, user)
 	if err != nil {
 		log.Println(err)
 		return c.String(http.StatusInternalServerError, "Could not update user")
