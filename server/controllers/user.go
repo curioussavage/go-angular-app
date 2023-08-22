@@ -13,6 +13,7 @@ import (
 // @Success 200 {array} models.User
 // @Router /users [get]
 func GetUsersController(c echo.Context) error {
+	// TODO pagination (probably skip on this for time)
 	users := []models.User{
 		{
 			UserName:   "user1",
