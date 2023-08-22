@@ -1,5 +1,7 @@
 package models
 
+import "database/sql"
+
 type UserStatus string
 
 const (
@@ -20,12 +22,16 @@ type User struct {
 	UserStatus UserStatus `json:"userStatus" db:"user_status"`
 }
 
-func GetUsers() []User {
+type UserService struct {
+	DB *sql.DB
+}
+
+func (u *UserService) GetUsers() []User {
 	return make([]User, 0)
 }
 
-func CreateUser(userName string) {}
+func (u *UserService) CreateUser(user User) {}
 
-func DeleteUser(userId int) {}
+func (u *UserService) DeleteUser(userId int) {}
 
-func updateUser(user User) {}
+func (u *UserService) updateUser(user User) {}
