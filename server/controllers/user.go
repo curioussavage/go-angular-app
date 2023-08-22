@@ -42,6 +42,7 @@ func (ctl *UserController) GetUsersController(c echo.Context) error {
 // @Description Delete a user
 // @Accept json
 // @Produce json
+// @Param id path int true "id of user to delete"
 // @Success 200 {string} string "ok"
 // @Router /user/:id [delete]
 func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
@@ -63,7 +64,8 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Description Update a user
 // @Accept json
 // @Produce json
-// @Param user body models.UserUpdateForm true "user data to update"
+// @Param id path int true "id of user to update"
+// @Param userUpdate body models.UserUpdateForm true "user data to update"
 // @Success 200 {object} models.User
 // @Router /user/:id [patch]
 func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
