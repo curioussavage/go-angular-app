@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -63,9 +64,28 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.User
-// @Router /user/:id [post]
+// @Router /user/:id [put]
 func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
-	return c.String(http.StatusOK, "update")
+	var user models.User
+	err := c.Bind(&user)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Bad request")
+	}
+
+	userIdString := c.Param("id")
+	userID, err := strconv.Atoi(userIdString)
+	if err != nil {
+		// TODO add an err response type
+		return c.String(http.StatusBadRequest, "Bad request: id must be an integer")
+	}
+	user.UserID = userID
+
+	updatedUser, err := ctl.userService.UpdateUser(user)
+	if err != nil {
+		log.Println(err)
+		return c.String(http.StatusInternalServerError, "Could not update user")
+	}
+	return c.JSON(http.StatusOK, updatedUser)
 }
 
 // @Summary create a user

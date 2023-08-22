@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/Masterminds/squirrel"
@@ -90,5 +91,56 @@ func (u *UserService) DeleteUser(userId int) error {
 }
 
 func (u *UserService) UpdateUser(user User) (User, error) {
-	return User{}, nil
+	updateQuery := squirrel.Update("users").Where(squirrel.Eq{"user_id": user.UserID})
+
+	if user.UserName != "" {
+		updateQuery = updateQuery.Set("username", user.UserName)
+	}
+	if user.FirstName != "" {
+		updateQuery = updateQuery.Set("first_name", user.FirstName)
+	}
+	if user.LastName != "" {
+		updateQuery = updateQuery.Set("last_name", user.LastName)
+	}
+	if user.Email != "" {
+		updateQuery = updateQuery.Set("email", user.Email)
+	}
+	if user.UserStatus != "" {
+		updateQuery = updateQuery.Set("user_status", user.UserStatus)
+	}
+
+	if user.Department == "" {
+		updateQuery = updateQuery.Set("department", nil)
+	} else {
+		updateQuery = updateQuery.Set("department", user.Department)
+	}
+
+	_, err := updateQuery.RunWith(u.DB).Exec()
+	if err != nil {
+		return User{}, fmt.Errorf("Could not update user: %v", err)
+	}
+
+	newUser, err := u.getUser(user.UserID)
+	if err != nil {
+		return User{}, err
+	}
+
+	return newUser, nil
+}
+
+func (u *UserService) getUser(userId int) (User, error) {
+	query := squirrel.Select("*").
+		From("users").
+		Where(squirrel.Eq{"user_id": userId})
+
+	var user User
+	var dep sql.NullString
+	err := query.RunWith(u.DB).QueryRow().
+		Scan(&user.UserID, &user.UserName, &user.FirstName, &user.LastName, &user.Email, &dep, &user.UserStatus)
+
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
 }
