@@ -18,13 +18,13 @@ func main() {
 
 	sql := `
 	  CREATE TABLE users (
-				user_id SERIAL PRIMARY KEY,
+				user_id INTEGER PRIMARY KEY AUTOINCREMENT,
 				username VARCHAR(50) NOT NULL,
 				first_name VARCHAR(255) NOT NULL,
 				last_name VARCHAR(255) NOT NULL,
 				email VARCHAR(255) NOT NULL,
-				user_status VARCHAR(1) NOT NULL,
-				department VARCHAR(255) NULL
+				department VARCHAR(255) NULL,
+				user_status VARCHAR(1) NOT NULL
 		)
 	`
 	_, err = db.Exec(sql)
