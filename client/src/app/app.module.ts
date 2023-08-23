@@ -15,6 +15,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { BASE_PATH, DefaultService } from 'projects/api-client';
+import { ApiModule } from 'projects/api-client';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -34,9 +37,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatIconModule,
     MatToolbarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    ApiModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: BASE_PATH, useValue: 'http://localhost:1323/api/v1' },
+    DefaultService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,6 +9,7 @@ import (
 	"github.com/curioussavage/integra/models"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/curioussavage/integra/docs"
@@ -48,6 +49,12 @@ func main() {
 	userController := controllers.NewUserController(&userService)
 
 	e.Validator = &CustomValidator{validator: validator.New()}
+
+	// TODO this should only be done in dev
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+	}))
 
 	e.GET("/api/v1/users", userController.GetUsersController)
 	e.POST("/api/v1/user", userController.CreateUsercontroller)

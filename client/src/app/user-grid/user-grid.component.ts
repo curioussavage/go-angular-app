@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { User } from '../user';
 import { UserService } from '../user.service';
+import { DefaultService, ModelsUser } from 'projects/api-client';
 
 @Component({
   selector: 'app-user-grid',
@@ -8,12 +10,13 @@ import { UserService } from '../user.service';
   styleUrls: ['./user-grid.component.css'],
 })
 export class UserGridComponent {
-  users: User[] = [];
+  users: Observable<ModelsUser[]>;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private defService: DefaultService) {}
 
   getUsers(): void {
-    this.users = this.userService.getUsers();
+    this.users = this.defService.usersGet()
+    // this.users = this.userService.getUsers();
   }
 
   ngOnInit(): void {

@@ -5,7 +5,7 @@
 </mat-toolbar>
 <div>
   <mat-grid-list cols="2"  gutterSize="5px">
-    <mat-grid-tile *ngFor="let user of users" >
+    <mat-grid-tile *ngFor="let user of users | async" >
       <app-user-card [user]="user" ></app-user-card>
     </mat-grid-tile>
   </mat-grid-list>
