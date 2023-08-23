@@ -7,9 +7,9 @@
     <p>{{user.email}}</p>
   </mat-card-content>
   <mat-card-actions align="end">
-    <button mat-raised-button>
-      <mat-icon aria-hidden="false" aria-label="edit icon" fontIcon="edit"></mat-icon>
-    </button>
+    <a mat-raised-button routerLink="/edit-user/{{user.userID}}">
+        <mat-icon aria-hidden="false" aria-label="edit icon" fontIcon="edit"></mat-icon>
+      </a>
     <button mat-raised-button (click)="openDeleteDialog()">
       <mat-icon aria-hidden="false" aria-label="delete icon" fontIcon="delete"></mat-icon>
     </button>

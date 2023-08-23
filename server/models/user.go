@@ -55,14 +55,24 @@ type UserUpdateForm struct {
 	Email     string `json:"email" validate:"omitempty,email,min=3,max=255"`
 }
 
+type UserFilters struct {
+	Id int `query:"id"`
+}
+
 type UserService struct {
 	DB *sql.DB
 }
 
-func (u *UserService) GetUsers() ([]User, error) {
-	rows, err := squirrel.Select("*").
+func (u *UserService) GetUsers(filters UserFilters) ([]User, error) {
+	query := squirrel.Select("*").
 		From("users").
-		Where(squirrel.Eq{"user_status": Active}).
+		Where(squirrel.Eq{"user_status": Active})
+
+	if filters.Id != 0 {
+		query = query.Where(squirrel.Eq{"user_id": filters.Id})
+	}
+
+	rows, err := query.
 		RunWith(u.DB).
 		Query()
 	if err != nil {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +21,7 @@ import { BASE_PATH, DefaultService } from 'projects/api-client';
 import { ApiModule } from 'projects/api-client';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { UserEditFormComponent } from './user-edit-form/user-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     UserFormComponent,
     UserCardComponent,
     UserGridComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    UserEditFormComponent
   ],
   imports: [
     AppRoutingModule,
@@ -43,7 +46,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatFormFieldModule,
     MatInputModule,
     ApiModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: BASE_PATH, useValue: 'http://localhost:1323/api/v1' },

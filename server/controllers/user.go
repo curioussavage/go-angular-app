@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	GetUsers() ([]models.User, error)
+	GetUsers(query models.UserFilters) ([]models.User, error)
 	CreateUser(user models.UserCreationForm) (models.User, error)
 	DeleteUser(userID int) error
 	UpdateUser(userID int, user models.UserUpdateForm) (models.User, error)
@@ -27,11 +27,17 @@ func NewUserController(userService UserService) UserController {
 // @Summary Get a list of users
 // @Description get users
 // @Produce json
+// @Param id query int false "A user id to filter by"
 // @Success 200 {array} models.User
 // @Router /users [get]
 func (ctl *UserController) GetUsersController(c echo.Context) error {
+	var userFilters models.UserFilters
+	err := c.Bind(&userFilters)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
 	// TODO pagination (probably skip on this for time)
-	users, err := ctl.userService.GetUsers()
+	users, err := ctl.userService.GetUsers(userFilters)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, struct{}{})
 	}
@@ -80,6 +86,10 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 	if err != nil {
 		// TODO add an err response type
 		return c.String(http.StatusBadRequest, "Bad request: id must be an integer")
+	}
+
+	if err := c.Validate(user); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	updatedUser, err := ctl.userService.UpdateUser(userID, user)

@@ -53,7 +53,7 @@ func main() {
 	// TODO this should only be done in dev
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+		AllowMethods: []string{echo.GET, echo.PATCH, echo.POST, echo.DELETE},
 	}))
 
 	e.GET("/api/v1/users", userController.GetUsersController)

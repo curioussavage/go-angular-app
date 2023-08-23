@@ -200,13 +200,20 @@ export class DefaultService {
     /**
      * Get a list of users
      * get users
+     * @param id A user id to filter by
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public usersGet(observe?: 'body', reportProgress?: boolean): Observable<Array<ModelsUser>>;
-    public usersGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ModelsUser>>>;
-    public usersGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ModelsUser>>>;
-    public usersGet(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public usersGet(id?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ModelsUser>>;
+    public usersGet(id?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ModelsUser>>>;
+    public usersGet(id?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ModelsUser>>>;
+    public usersGet(id?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (id !== undefined && id !== null) {
+            queryParameters = queryParameters.set('id', <any>id);
+        }
 
         let headers = this.defaultHeaders;
 
@@ -225,6 +232,7 @@ export class DefaultService {
 
         return this.httpClient.request<Array<ModelsUser>>('get',`${this.basePath}/users`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
