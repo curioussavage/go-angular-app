@@ -4,7 +4,7 @@
   <a mat-raised-button color="primary" routerLink="/new-user">New User</a>
 </mat-toolbar>
 <div>
-  <mat-grid-list cols="2"  gutterSize="5px">
+  <mat-grid-list cols="2" rowHeight="4:2"  gutterSize="5px">
     <mat-grid-tile *ngFor="let user of users | async" >
       <app-user-card [user]="user" ></app-user-card>
     </mat-grid-tile>
