@@ -8,16 +8,25 @@
       <mat-form-field>
         <mat-label for="firstName">First Name: </mat-label>
         <input matInput id="firstName" required formControlName="firstName" name="firstName" placeholder="name">
+        <mat-error *ngIf="getServerError('firstName')">
+          {{ getServerError('firstName') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="lastName">Last Name: </mat-label>
         <input matInput id="lastName" required formControlName="lastName" name="lastName" placeholder="name">
+        <mat-error *ngIf="getServerError('lastName')">
+          {{ getServerError('lastName') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="email">Email: </mat-label>
         <input matInput id="email" required formControlName="email" name="email" placeholder="email">
+        <mat-error *ngIf="getServerError('email')">
+          {{ getServerError('email') }}
+        </mat-error>
       </mat-form-field>
 
       <div>

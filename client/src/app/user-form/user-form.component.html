@@ -3,35 +3,50 @@
 </mat-toolbar>
 <mat-card >
   <mat-card-content>
-    <form class="form-container" (ngSubmit)="onSubmit()" #userForm="ngForm">
+    <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()" >
       <mat-form-field>
         <mat-label for="username">Username: </mat-label>
-        <input matInput id="username" required [(ngModel)]="user.userName" name="username" placeholder="username">
+        <input matInput id="username" required formControlName="userName" name="username" placeholder="username">
+        <mat-error *ngIf="getServerError('userName')">
+          {{ getServerError('userName') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="firstName">First Name: </mat-label>
-        <input matInput id="firstName" required [(ngModel)]="user.firstName" name="firstName" placeholder="name">
+        <input matInput id="firstName" required formControlName="firstName" name="firstName" placeholder="name">
+        <mat-error *ngIf="getServerError('firstName')">
+          {{ getServerError('firstName') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="lastName">Last Name: </mat-label>
-        <input matInput id="lastName" required [(ngModel)]="user.lastName" name="lastName" placeholder="name">
+        <input matInput id="lastName" required formControlName="lastName" name="lastName" placeholder="name">
+        <mat-error *ngIf="getServerError('lastName')">
+          {{ getServerError('lastName') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="email">Email: </mat-label>
-        <input matInput id="email" required [(ngModel)]="user.email" name="email" placeholder="email">
+        <input matInput id="email" required formControlName="email" name="email" placeholder="email">
+        <mat-error *ngIf="getServerError('email')">
+          {{ getServerError('email') }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label for="department">Department: </mat-label>
-        <input matInput id="department" required [(ngModel)]="user.department" name="department" placeholder="department">
+        <input matInput id="department" formControlName="department" name="department" placeholder="department">
+        <mat-error *ngIf="getServerError('department')">
+          {{ getServerError('department') }}
+        </mat-error>
       </mat-form-field>
 
       <div>
       <a mat-raised-button routerLink="/">cancel</a>
-      <button mat-raised-button color="primary" [disabled]="!userForm.form.valid">submit</button>
+      <button mat-raised-button color="primary" [disabled]="!form.valid">submit</button>
       </div>
     </form>
   </mat-card-content>

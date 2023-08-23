@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	apperrors "github.com/curioussavage/integra/errors"
 	"github.com/curioussavage/integra/models"
 	"github.com/labstack/echo/v4"
 )
@@ -73,6 +74,7 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Param id path int true "id of user to update"
 // @Param userUpdate body models.UserUpdateForm true "user data to update"
 // @Success 200 {object} models.User
+// @Failure 400 {array} apperrors.ValidationErrors
 // @Router /user/{id} [patch]
 func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 	var user models.UserUpdateForm
@@ -106,12 +108,13 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 // @Produce json
 // @Param user body models.UserCreationForm true "user to create"
 // @Success 200 {object} models.User
+// @Failure 400 {array} apperrors.ValidationErrors
 // @Router /user [post]
 func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
 	var user models.UserCreationForm
 	err := c.Bind(&user)
 	if err != nil {
-		return c.String(http.StatusBadRequest, "Bad request")
+		return c.JSON(http.StatusBadRequest, "Bad request")
 	}
 
 	if err := c.Validate(user); err != nil {
@@ -121,9 +124,13 @@ func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
 	newUser, err := ctl.userService.CreateUser(user)
 	if err != nil {
 		if _, ok := err.(*models.UsernameTakenError); ok {
-			return c.String(http.StatusBadRequest, err.Error())
+			err := apperrors.ValidationErrors{apperrors.ValidationError{
+				Field:   "userName",
+				Message: "username not available.",
+			}}
+			return c.JSON(http.StatusBadRequest, err)
 		}
-		return c.String(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, newUser)
 }

@@ -17,6 +17,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { ApperrorsValidationError } from '../model/apperrorsValidationError';
 import { ModelsUser } from '../model/modelsUser';
 import { ModelsUserCreationForm } from '../model/modelsUserCreationForm';
 import { ModelsUserUpdateForm } from '../model/modelsUserUpdateForm';

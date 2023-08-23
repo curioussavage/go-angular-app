@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/curioussavage/integra/controllers"
+	apperrors "github.com/curioussavage/integra/errors"
 	"github.com/curioussavage/integra/models"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -22,7 +23,15 @@ type CustomValidator struct {
 
 func (cv *CustomValidator) Validate(i interface{}) error {
 	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		validationErrors := err.(validator.ValidationErrors)
+		var appErrors apperrors.ValidationErrors
+		for i := range validationErrors {
+			err := validationErrors[i]
+			message := fmt.Sprintf("Validation failed for %s", err.Tag())
+			appErrors = append(appErrors, apperrors.ValidationError{Field: err.Tag(), Message: message})
+		}
+		// return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return appErrors
 	}
 	return nil
 }

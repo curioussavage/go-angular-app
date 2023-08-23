@@ -36,10 +36,26 @@ export class UserEditFormComponent {
     );
   }
 
+  getServerError(field: string): string | undefined {
+    const ctl = this.editForm.get(field);
+    if (ctl && ctl.errors !== null) {
+      return ctl.errors['serverError'];
+    }
+    return
+  }
+
   updateUser(): void {
     this.defService.userIdPatch(this.editForm.value, this.user.userID!).subscribe(
       (data) => {
         this.router.navigate(['/']);
+      },
+      (err) => {
+        if (Array.isArray(err.error)) {
+          for (let e of err.error) {
+            const ctl = this.editForm.get(e.field);
+            ctl?.setErrors({ serverError: e.message})
+          }
+        }
       }
     );
   }
