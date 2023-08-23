@@ -11,6 +11,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material/input';
@@ -18,13 +19,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { BASE_PATH, DefaultService } from 'projects/api-client';
 import { ApiModule } from 'projects/api-client';
 import { HttpClientModule } from '@angular/common/http';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserFormComponent,
     UserCardComponent,
-    UserGridComponent
+    UserGridComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -33,6 +36,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatGridListModule,
     MatIconModule,
     MatToolbarModule,

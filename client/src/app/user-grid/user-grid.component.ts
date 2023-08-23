@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../user';
-import { UserService } from '../user.service';
 import { DefaultService, ModelsUser } from 'projects/api-client';
 
 @Component({
@@ -12,14 +10,27 @@ import { DefaultService, ModelsUser } from 'projects/api-client';
 export class UserGridComponent {
   users: Observable<ModelsUser[]>;
 
-  constructor(private userService: UserService, private defService: DefaultService) {}
+  constructor(private defService: DefaultService) {}
 
   getUsers(): void {
     this.users = this.defService.usersGet()
-    // this.users = this.userService.getUsers();
   }
 
   ngOnInit(): void {
     this.getUsers();
+  }
+
+  onDelete(userId: number) {
+    console.log("onDelete ", userId)
+    this.defService
+      .userIdDelete(userId)
+      .subscribe(
+        (resp) => {
+          this.getUsers();
+        },
+        (err) => {
+          // TODO
+        }
+      );
   }
 }

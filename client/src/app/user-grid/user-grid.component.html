@@ -6,7 +6,7 @@
 <div>
   <mat-grid-list cols="2" rowHeight="4:2"  gutterSize="5px">
     <mat-grid-tile *ngFor="let user of users | async" >
-      <app-user-card [user]="user" ></app-user-card>
+      <app-user-card [user]="user" (delete)="onDelete(user.userID!)" ></app-user-card>
     </mat-grid-tile>
   </mat-grid-list>
 </div>

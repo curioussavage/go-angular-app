@@ -44,7 +44,7 @@ func (ctl *UserController) GetUsersController(c echo.Context) error {
 // @Produce json
 // @Param id path int true "id of user to delete"
 // @Success 200 {string} string "ok"
-// @Router /user/:id [delete]
+// @Router /user/{id} [delete]
 func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 	userIdString := c.Param("id")
 	userID, err := strconv.Atoi(userIdString)
@@ -57,7 +57,7 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Encountered an error while deleting user")
 
 	}
-	return c.String(http.StatusOK, "ok")
+	return c.JSON(http.StatusOK, "ok")
 }
 
 // @Summary Update a user
@@ -67,7 +67,7 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Param id path int true "id of user to update"
 // @Param userUpdate body models.UserUpdateForm true "user data to update"
 // @Success 200 {object} models.User
-// @Router /user/:id [patch]
+// @Router /user/{id} [patch]
 func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 	var user models.UserUpdateForm
 	err := c.Bind(&user)

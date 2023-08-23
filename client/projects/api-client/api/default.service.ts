@@ -58,6 +58,99 @@ export class DefaultService {
 
 
     /**
+     * Delete a user
+     * Delete a user
+     * @param id id of user to delete
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public userIdDelete(id: number, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public userIdDelete(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public userIdDelete(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
+    public userIdDelete(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling userIdDelete.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<string>('delete',`${this.basePath}/user/${encodeURIComponent(String(id))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update a user
+     * Update a user
+     * @param body user data to update
+     * @param id id of user to update
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public userIdPatch(body: ModelsUserUpdateForm, id: number, observe?: 'body', reportProgress?: boolean): Observable<ModelsUser>;
+    public userIdPatch(body: ModelsUserUpdateForm, id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelsUser>>;
+    public userIdPatch(body: ModelsUserUpdateForm, id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelsUser>>;
+    public userIdPatch(body: ModelsUserUpdateForm, id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling userIdPatch.');
+        }
+
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling userIdPatch.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<ModelsUser>('patch',`${this.basePath}/user/${encodeURIComponent(String(id))}`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * create a user
      * create a user
      * @param body user to create
@@ -94,99 +187,6 @@ export class DefaultService {
         }
 
         return this.httpClient.request<ModelsUser>('post',`${this.basePath}/user`,
-            {
-                body: body,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Delete a user
-     * Delete a user
-     * @param id id of user to delete
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public useridDelete(id: number, observe?: 'body', reportProgress?: boolean): Observable<string>;
-    public useridDelete(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
-    public useridDelete(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
-    public useridDelete(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling useridDelete.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-        ];
-
-        return this.httpClient.request<string>('delete',`${this.basePath}/user/:id`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update a user
-     * Update a user
-     * @param body user data to update
-     * @param id id of user to update
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public useridPatch(body: ModelsUserUpdateForm, id: number, observe?: 'body', reportProgress?: boolean): Observable<ModelsUser>;
-    public useridPatch(body: ModelsUserUpdateForm, id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelsUser>>;
-    public useridPatch(body: ModelsUserUpdateForm, id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelsUser>>;
-    public useridPatch(body: ModelsUserUpdateForm, id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling useridPatch.');
-        }
-
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling useridPatch.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected != undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.request<ModelsUser>('patch',`${this.basePath}/user/:id`,
             {
                 body: body,
                 withCredentials: this.configuration.withCredentials,

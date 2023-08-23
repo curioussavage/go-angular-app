@@ -23,8 +23,7 @@ export class UserFormComponent {
         console.log("got data");
         this.router.navigate(['/']);
       }
-    )
-    console.log("creating the user")
+    );
   }
 
 }
