@@ -8,7 +8,7 @@ import { DefaultService, ModelsUser } from 'projects/api-client';
   styleUrls: ['./user-grid.component.css'],
 })
 export class UserGridComponent {
-  users: Observable<ModelsUser[]>;
+  users?: Observable<ModelsUser[]>;
 
   constructor(private defService: DefaultService) {}
 

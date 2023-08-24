@@ -1,16 +1,16 @@
 <mat-card >
   <mat-card-header>
-    <h2>{{user.userName}}</h2>
+    <h2 id="username">{{user.userName}}</h2>
   </mat-card-header>
   <mat-card-content>
     <p>{{user.firstName}} {{user.lastName}}</p>
     <p>{{user.email}}</p>
   </mat-card-content>
   <mat-card-actions align="end">
-    <a mat-raised-button routerLink="/edit-user/{{user.userID}}">
+    <a mat-button routerLink="/edit-user/{{user.userID}}">
         <mat-icon aria-hidden="false" aria-label="edit icon" fontIcon="edit"></mat-icon>
       </a>
-    <button mat-raised-button (click)="openDeleteDialog()">
+    <button mat-button (click)="openDeleteDialog()">
       <mat-icon aria-hidden="false" aria-label="delete icon" fontIcon="delete"></mat-icon>
     </button>
   </mat-card-actions>

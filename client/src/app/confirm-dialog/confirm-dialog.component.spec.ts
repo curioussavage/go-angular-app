@@ -1,6 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppModule } from '../app.module';
+
+import {MatDialogHarness} from '@angular/material/dialog/testing';
+import { MatDialogModule, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ConfirmDialogComponent } from './confirm-dialog.component';
+
+import { MatDialogRef } from '@angular/material/dialog';
+
 
 describe('ConfirmDialogComponent', () => {
   let component: ConfirmDialogComponent;
@@ -8,7 +15,12 @@ describe('ConfirmDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConfirmDialogComponent ]
+      imports: [AppModule, MatDialogModule],
+      declarations: [ ConfirmDialogComponent ],
+      providers: [
+        {provide: MAT_DIALOG_DATA, useValue: { message: "test" }},
+        {provide: MatDialogRef, useValue: { close: (res: any) => res }}
+      ]
     })
     .compileComponents();
 
@@ -17,7 +29,8 @@ describe('ConfirmDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    MatDialogHarness
     expect(component).toBeTruthy();
   });
 });

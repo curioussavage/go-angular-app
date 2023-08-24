@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppModule } from '../app.module';
 
 import { UserGridComponent } from './user-grid.component';
 
@@ -8,6 +9,7 @@ describe('UserGridComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [AppModule],
       declarations: [ UserGridComponent ]
     })
     .compileComponents();

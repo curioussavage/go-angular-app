@@ -13,9 +13,7 @@ export class UserFormComponent {
   user: UserSubmission = { userName: '', firstName: '', lastName: '', email: '', department: ''};
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, private defService: DefaultService) {}
-
-  ngOnInit() {
+  constructor(private fb: FormBuilder, private router: Router, private defService: DefaultService) {
     this.form = this.fb.group({
       userName: [],
       firstName: [],

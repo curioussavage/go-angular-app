@@ -10,18 +10,19 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   styleUrls: ['./user-edit-form.component.css']
 })
 export class UserEditFormComponent {
-  @Input() user: ModelsUser;
+  @Input() user?: ModelsUser;
   editForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private router: Router, private defService: DefaultService) {}
-
-  ngOnInit(): void {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private router: Router, private defService: DefaultService) {
+    // TODO add validators
     this.editForm = this.fb.group({
       firstName: [],
       lastName: [],
       email: []
     });
+  }
 
+  ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('id');
     this.defService.usersGet(parseInt(userId || '0')).subscribe(
       (data) => {
@@ -45,6 +46,7 @@ export class UserEditFormComponent {
   }
 
   updateUser(): void {
+    if (!this.user) { return }
     this.defService.userIdPatch(this.editForm.value, this.user.userID!).subscribe(
       (data) => {
         this.router.navigate(['/']);
