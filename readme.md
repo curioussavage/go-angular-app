@@ -37,6 +37,21 @@ npm install
 npm run start
 ```
 
+# Test
+
+server
+
+```
+cd server/
+go test ./models ./controllers
+```
+
+client
+
+```
+npm run test
+```
+
 # notes
 
 The following features were not implemented comprehensively to save time.
