@@ -6,7 +6,7 @@ This is an example of a Go server that provides an HTTP API and swagger docs.
 # Build
 
 The angular client for the API has been checked in so it should not be necessary to
-rebuild it. If necessary that can be done by installing `swagger-codegen`
+rebuild it. If necessary that can be done by installing [swagger-codegen](https://swagger.io/tools/swagger-codegen/)
 
 ```
 swagger-codegen generate -i /path/to/project/go-angular-app/server/docs/swagger.json -l typescript-angular -o /path/to/project/go-angular-app/projects/api-client
