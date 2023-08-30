@@ -65,10 +65,10 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.PATCH, echo.POST, echo.DELETE},
 	}))
 
-	e.GET("/api/v1/users", userController.GetUsersController)
-	e.POST("/api/v1/user", userController.CreateUsercontroller)
-	e.PATCH("/api/v1/user/:id", userController.UpdateUsercontroller)
-	e.DELETE("/api/v1/user/:id", userController.DeleteUsercontroller)
+	e.GET("/api/v1/users", userController.GetUsers)
+	e.POST("/api/v1/user", userController.CreateUser)
+	e.PATCH("/api/v1/user/:id", userController.UpdateUser)
+	e.DELETE("/api/v1/user/:id", userController.DeleteUser)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

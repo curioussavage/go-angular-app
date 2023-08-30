@@ -38,7 +38,7 @@ func (m *MockUserSvc) UpdateUser(userID int, user models.UserUpdateForm) (models
 	return models.User{}, nil
 }
 
-func TestBooks(t *testing.T) {
+func TestUser(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Controllers Suite")
 }
@@ -68,7 +68,7 @@ var _ = Describe("GetUsersController", func() {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			err := controller.GetUsersController(c)
+			err := controller.GetUsers(c)
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(rec.Code).To(Equal(http.StatusOK))
@@ -85,7 +85,7 @@ var _ = Describe("GetUsersController", func() {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			err := controller.GetUsersController(c)
+			err := controller.GetUsers(c)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(rec.Code).To(Equal(http.StatusBadRequest))
 		})
@@ -98,7 +98,7 @@ var _ = Describe("GetUsersController", func() {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			err := controller.GetUsersController(c)
+			err := controller.GetUsers(c)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(rec.Code).To(Equal(http.StatusInternalServerError))
 		})

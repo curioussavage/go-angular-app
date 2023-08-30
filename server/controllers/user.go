@@ -31,7 +31,7 @@ func NewUserController(userService UserService) UserController {
 // @Param id query int false "A user id to filter by"
 // @Success 200 {array} models.User
 // @Router /users [get]
-func (ctl *UserController) GetUsersController(c echo.Context) error {
+func (ctl *UserController) GetUsers(c echo.Context) error {
 	var userFilters models.UserFilters
 	err := c.Bind(&userFilters)
 	if err != nil {
@@ -52,7 +52,7 @@ func (ctl *UserController) GetUsersController(c echo.Context) error {
 // @Param id path int true "id of user to delete"
 // @Success 200 {string} string "ok"
 // @Router /user/{id} [delete]
-func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
+func (ctl *UserController) DeleteUser(c echo.Context) error {
 	userIdString := c.Param("id")
 	userID, err := strconv.Atoi(userIdString)
 	if err != nil {
@@ -76,7 +76,7 @@ func (ctl *UserController) DeleteUsercontroller(c echo.Context) error {
 // @Success 200 {object} models.User
 // @Failure 400 {array} apperrors.ValidationErrors
 // @Router /user/{id} [patch]
-func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
+func (ctl *UserController) UpdateUser(c echo.Context) error {
 	var user models.UserUpdateForm
 	err := c.Bind(&user)
 	if err != nil {
@@ -110,7 +110,7 @@ func (ctl *UserController) UpdateUsercontroller(c echo.Context) error {
 // @Success 200 {object} models.User
 // @Failure 400 {array} apperrors.ValidationErrors
 // @Router /user [post]
-func (ctl *UserController) CreateUsercontroller(c echo.Context) error {
+func (ctl *UserController) CreateUser(c echo.Context) error {
 	var user models.UserCreationForm
 	err := c.Bind(&user)
 	if err != nil {
