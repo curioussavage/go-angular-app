@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type UserService interface {
+type userService interface {
 	GetUsers(query models.UserFilters) ([]models.User, error)
 	CreateUser(user models.UserCreationForm) (models.User, error)
 	DeleteUser(userID int) error
@@ -18,10 +18,10 @@ type UserService interface {
 }
 
 type UserController struct {
-	userService UserService
+	userService userService
 }
 
-func NewUserController(userService UserService) UserController {
+func NewUserController(userService userService) UserController {
 	return UserController{userService: userService}
 }
 
