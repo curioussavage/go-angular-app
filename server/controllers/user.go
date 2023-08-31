@@ -114,7 +114,7 @@ func (ctl *UserController) CreateUser(c echo.Context) error {
 	var user models.UserCreationForm
 	err := c.Bind(&user)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Bad request")
+		return err
 	}
 
 	if err := c.Validate(user); err != nil {

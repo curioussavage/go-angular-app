@@ -2,12 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/curioussavage/integra/controllers"
-	apperrors "github.com/curioussavage/integra/errors"
 	"github.com/curioussavage/integra/models"
+	"github.com/curioussavage/integra/validation"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -16,25 +15,6 @@ import (
 	_ "github.com/curioussavage/integra/docs"
 	_ "github.com/mattn/go-sqlite3"
 )
-
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		validationErrors := err.(validator.ValidationErrors)
-		var appErrors apperrors.ValidationErrors
-		for i := range validationErrors {
-			err := validationErrors[i]
-			message := fmt.Sprintf("Validation failed for %s", err.Tag())
-			appErrors = append(appErrors, apperrors.ValidationError{Field: err.Tag(), Message: message})
-		}
-		// return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		return appErrors
-	}
-	return nil
-}
 
 // @title User API
 // @version 1.0
@@ -57,7 +37,7 @@ func main() {
 	userService := models.UserService{DB: db}
 	userController := controllers.NewUserController(&userService)
 
-	e.Validator = &CustomValidator{validator: validator.New()}
+	e.Validator = &validation.CustomValidator{Validator: validator.New()}
 
 	// TODO this should only be done in dev
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
