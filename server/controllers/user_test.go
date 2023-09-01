@@ -18,9 +18,10 @@ import (
 )
 
 type MockUserSvc struct {
-	GetUsersError   error
-	CreateUserError error
-	Users           []models.User
+	GetUsersError    error
+	CreateUserError  error
+	Users            []models.User
+	CreateUserResult models.User
 }
 
 func (m *MockUserSvc) GetUsers(query models.UserFilters) ([]models.User, error) {
@@ -34,7 +35,7 @@ func (m *MockUserSvc) CreateUser(user models.UserCreationForm) (models.User, err
 	if m.CreateUserError != nil {
 		return models.User{}, m.CreateUserError
 	}
-	return models.User{}, nil
+	return m.CreateUserResult, nil
 }
 
 func (m *MockUserSvc) DeleteUser(userID int) error {
@@ -126,12 +127,20 @@ var _ = Describe("CreateUserController", func() {
 
 	When("a user is successfully created", func() {
 		It("Should return a user", func() {
+			testUser := models.User{
+				UserID:    1,
+				UserName:  "abc",
+				FirstName: "peter",
+				Email:     "a@b.com",
+				LastName:  "parker",
+			}
+			userSvc.CreateUserResult = testUser
 			userForm := models.UserCreationForm{
-				UserName:   "JohnDoe",
-				FirstName:  "John",
-				LastName:   "Doe",
-				Email:      "john.doe@example.com",
-				Department: "Engineering",
+				UserName:   testUser.UserName,
+				FirstName:  testUser.FirstName,
+				LastName:   testUser.LastName,
+				Email:      testUser.Email,
+				Department: testUser.Department,
 			}
 			jsonBody, _ := json.Marshal(userForm)
 
@@ -142,6 +151,8 @@ var _ = Describe("CreateUserController", func() {
 
 			err := controller.CreateUser(c)
 			Expect(err).ToNot(HaveOccurred())
+			testUserJSON, _ := json.Marshal(testUser)
+			Expect(rec.Body.String()).To(MatchJSON(testUserJSON))
 		})
 	})
 
@@ -171,7 +182,7 @@ var _ = Describe("CreateUserController", func() {
 	When("body validation fails", func() {
 		It("Should return bad request", func() {
 			userForm := models.UserCreationForm{
-				UserName:   "J",
+				UserName:   "JJJ",
 				FirstName:  "John",
 				LastName:   "Doe",
 				Email:      "a",
