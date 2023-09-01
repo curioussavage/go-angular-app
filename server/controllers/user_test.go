@@ -171,7 +171,7 @@ var _ = Describe("CreateUserController", func() {
 	When("body validation fails", func() {
 		It("Should return bad request", func() {
 			userForm := models.UserCreationForm{
-				UserName:   "JohnDoe",
+				UserName:   "J",
 				FirstName:  "John",
 				LastName:   "Doe",
 				Email:      "a",
